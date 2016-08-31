@@ -1,0 +1,23 @@
+{
+  "name": "kth-node-mongo",
+  "version": "1.0.0",
+  "description": "Database connection module for Node.js applications using Mongoose.",
+  "main": "index.js",
+  "scripts": {
+    "codecheck": "standard",
+    "preversion": "npm run codecheck",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KTH/kth-node-mongo"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^4.4.14"
+  },
+  "devDependencies": {
+    "standard": "^7.0.0"
+  }
+}

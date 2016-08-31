@@ -1,0 +1,17 @@
+.DS_Store
+
+# IDEA specific
+.idea
+*.iml
+
+# Eclipse specific
+.jshintrc
+.project
+.settings/
+
+# Logs
+logs/*
+*.log
+
+# Dependency directory
+node_modules
