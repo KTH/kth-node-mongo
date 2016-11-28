@@ -4,6 +4,9 @@
 .idea
 *.iml
 
+# VSCODE
+.vscode
+
 # Eclipse specific
 .jshintrc
 .project

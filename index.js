@@ -12,6 +12,29 @@ const stdLogger = {
   warn: consoleLogger('warn'),
   error: consoleLogger('error')
 }
+const RECONNECT_TIMEOUT = 30000
+
+let standardOptions = {
+  db: {
+    native_parser: true
+  },
+  server: {
+    socketOptions: {
+      keepAlive: 1
+    },
+    ssl: false,
+    authenticationDatabase: '',
+    auto_reconnect: true,
+    reconnectInterval: RECONNECT_TIMEOUT
+  },
+  replset: {
+    socketOptions: {
+      keepAlive: 1
+    }
+  },
+  user: '',
+  pass: ''
+}
 
 function consoleLogger (level) {
   return function (file, msg) {
@@ -41,9 +64,13 @@ function _connect (options, sslOptions) {
     log.info('Connect DB: ' + options.dbUri)
 
     mongoose.connection.on('error', dbErr => {
-      log.warn({ err: dbErr }, 'DB connection error')
+      log.warn({ err: dbErr.message }, 'DB connection error, retrying in 30 seconds')
       isOk = false
-      reject(dbErr)
+      // reject(dbErr)
+      setTimeout(function () {
+        mongoose.connect(dbUri, dbOptions)
+        log.info('Attempting to reconnect')
+      }, options.reconnectInterval || RECONNECT_TIMEOUT)
     })
 
     mongoose.connection.on('connected', () => {
@@ -65,52 +92,19 @@ function _connect (options, sslOptions) {
 }
 
 function getMongoOptions (options) {
-  var dbOptions = {
-    db: {
-      native_parser: true
-    },
-    server: {
-      socketOptions: {
-        keepAlive: 1
-      }
-    },
-    reconnectTries: options.reconnectTries || 1000,
-    reconnectInterval: options.reconnectInterval || 30000,
-    replset: {
-      socketOptions: {
-        keepAlive: 1
-      }
-    },
-    user: options.dbUsername,
-    pass: options.dbPassword
-  }
+  var dbOptions = standardOptions
+  dbOptions.reconnectInterval = options.reconnectInterval || RECONNECT_TIMEOUT
+  dbOptions.reconnectTries = options.reconnectTries || 0
+  dbOptions.user = options.dbUsername
+  dbOptions.pass = options.dbPassword
 
   return dbOptions
 }
 
 function getMongoOptionsSsl (options, sslOptions) {
-  var dbOptions = {
-    db: {
-      native_parser: true
-    },
-    server: {
-      socketOptions: {
-        keepAlive: 1
-      },
-      ssl: sslOptions.ssl,
-      authenticationDatabase: sslOptions.authDatabase,
-      sslCA: sslOptions.sslCA
-    },
-    reconnectTries: options.reconnectTries || 1000,
-    reconnectInterval: options.reconnectInterval || 30000,
-    replset: {
-      socketOptions: {
-        keepAlive: 1
-      }
-    },
-    user: options.dbUsername,
-    pass: options.dbPassword
-  }
+  var dbOptions = getMongoOptions(options)
+  dbOptions.ssl = sslOptions.ssl
+  dbOptions.authenticationDatabase = sslOptions.authDatabase
 
   return dbOptions
 }
