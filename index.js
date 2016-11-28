@@ -23,7 +23,6 @@ let standardOptions = {
       keepAlive: 1
     },
     ssl: false,
-    authenticationDatabase: '',
     auto_reconnect: true,
     reconnectInterval: RECONNECT_TIMEOUT
   },
@@ -32,8 +31,7 @@ let standardOptions = {
       keepAlive: 1
     }
   },
-  user: '',
-  pass: ''
+  logger: stdLogger
 }
 
 function consoleLogger (level) {
@@ -47,17 +45,12 @@ function _isOk () {
   return isOk === true
 }
 
-function _connect (options, sslOptions) {
+function _connect (options) {
   mongoose.Promise = global.Promise
   var log = options.logger || stdLogger
   // Mongoose connect is called once by the app.js & connection established
   var dbUri = options.dbUri
-  var dbOptions
-  if (typeof sslOptions === 'object') {
-    dbOptions = getMongoOptionsSsl(options, sslOptions)
-  } else {
-    dbOptions = getMongoOptions(options)
-  }
+  var dbOptions = getMongoOptions(options)
 
   return new Promise((resolve, reject) => {
     mongoose.connect(dbUri, dbOptions)
@@ -92,19 +85,16 @@ function _connect (options, sslOptions) {
 }
 
 function getMongoOptions (options) {
-  var dbOptions = standardOptions
-  dbOptions.reconnectInterval = options.reconnectInterval || RECONNECT_TIMEOUT
-  dbOptions.reconnectTries = options.reconnectTries || 0
-  dbOptions.user = options.dbUsername
-  dbOptions.pass = options.dbPassword
-
+  var dbOptions = _mergeOptions(standardOptions, options)
   return dbOptions
 }
 
-function getMongoOptionsSsl (options, sslOptions) {
-  var dbOptions = getMongoOptions(options)
-  dbOptions.ssl = sslOptions.ssl
-  dbOptions.authenticationDatabase = sslOptions.authDatabase
-
-  return dbOptions
+// merge all options objects front to back, i.e. later overriding earlier objects
+function _mergeOptions () {
+  var options = {}
+  for (var i = 0; i < arguments.length; ++i) {
+    let obj = arguments[i]
+    for (var attr in obj) { options[attr] = obj[attr] }
+  }
+  return options
 }
