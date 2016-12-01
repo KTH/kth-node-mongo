@@ -1,6 +1,6 @@
 {
   "name": "kth-node-mongo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Database connection module for Node.js applications using Mongoose.",
   "main": "index.js",
   "scripts": {
