@@ -59,11 +59,13 @@ function _connect (options) {
     mongoose.connection.on('error', dbErr => {
       log.warn({ err: dbErr.message }, 'DB connection error, retrying in 30 seconds')
       isOk = false
-      // reject(dbErr)
-      setTimeout(function () {
-        mongoose.connect(dbUri, dbOptions)
-        log.info('Attempting to reconnect')
-      }, options.reconnectInterval || RECONNECT_TIMEOUT)
+      // disconnect if connection is still open
+      mongoose.disconnect().then(() => {
+        setTimeout(function () {
+          mongoose.connect(dbUri, dbOptions)
+          log.info('Attempting to reconnect')
+        }, options.reconnectInterval || RECONNECT_TIMEOUT)
+      })
     })
 
     mongoose.connection.on('connected', () => {
