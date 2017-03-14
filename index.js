@@ -20,7 +20,9 @@ let standardOptions = {
   },
   server: {
     socketOptions: {
-      keepAlive: 1
+      keepAlive: 1,
+      socketTimeoutMS: 0,
+      connectTimeoutMS: 0
     },
     ssl: false,
     auto_reconnect: true,
@@ -28,7 +30,9 @@ let standardOptions = {
   },
   replset: {
     socketOptions: {
-      keepAlive: 1
+      keepAlive: 1,
+      socketTimeoutMS: 0,
+      connectTimeoutMS: 0
     }
   },
   logger: stdLogger
