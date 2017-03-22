@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
 
 // setup Mongoose connection to mongoDB
 module.exports = {
