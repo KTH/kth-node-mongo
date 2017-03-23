@@ -1,3 +1,5 @@
+'use strict'
+
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
@@ -58,9 +60,6 @@ function _connect (options) {
   var dbOptions = getMongoOptions(options)
 
   return new Promise((resolve, reject) => {
-    mongoose.connect(dbUri, dbOptions)
-    log.info('Connect DB: ' + options.dbUri)
-
     mongoose.connection.on('error', dbErr => {
       log.warn({ err: dbErr.message }, 'DB connection error, retrying in 30 seconds')
       isOk = false
@@ -88,6 +87,9 @@ function _connect (options) {
       log.info('DB connection reconnected')
       isOk = true
     })
+
+    mongoose.connect(dbUri, dbOptions)
+    log.info('Connect DB: ' + options.dbUri)
   })
 }
 
