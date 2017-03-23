@@ -1,4 +1,5 @@
 # kth-node-mongo
+[![Build Status](https://travis-ci.org/KTH/kth-node-mongo.svg?branch=master)](https://travis-ci.org/KTH/kth-node-mongo)
 Database connection wrapping Mongoose (for MongoDB)
 
 This module connects to mongoDB using Mongoose default connection.
