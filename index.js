@@ -18,26 +18,13 @@ const stdLogger = {
 const RECONNECT_TIMEOUT = 30000
 
 let standardOptions = {
-  db: {
-    native_parser: true
-  },
-  server: {
-    socketOptions: {
-      keepAlive: 1,
-      socketTimeoutMS: 0,
-      connectTimeoutMS: 0
-    },
-    ssl: false,
-    auto_reconnect: true,
-    reconnectInterval: RECONNECT_TIMEOUT
-  },
-  replset: {
-    socketOptions: {
-      keepAlive: 1,
-      socketTimeoutMS: 0,
-      connectTimeoutMS: 0
-    }
-  },
+  useMongoClient: true,
+  keepAlive: 1,
+  socketTimeoutMS: 0,
+  connectTimeoutMS: 0,
+  ssl: false,
+  autoReconnect: true,
+  reconnectInterval: RECONNECT_TIMEOUT,
   logger: stdLogger
 }
 
@@ -53,10 +40,10 @@ function _isOk () {
 }
 
 function _connect (options) {
-  mongoose.Promise = global.Promise
   var log = options.logger || stdLogger
   // Mongoose connect is called once by the app.js & connection established
   var dbUri = options.dbUri
+  delete options.dbUri
   var dbOptions = getMongoOptions(options)
 
   return new Promise((resolve, reject) => {
@@ -64,7 +51,7 @@ function _connect (options) {
       log.warn({ err: dbErr.message }, 'DB connection error, retrying in 30 seconds')
       isOk = false
       // disconnect if connection is still open
-      mongoose.disconnect().then(() => {
+      mongoose.disconnect(() => {
         setTimeout(function () {
           mongoose.connect(dbUri, dbOptions)
           log.info('Attempting to reconnect')
