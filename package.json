@@ -16,7 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "mongoose": "^5.0.1"
+    "mongoose": "^4.4.14"
   },
   "devDependencies": {
     "chai": "^3.5.0",

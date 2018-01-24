@@ -18,6 +18,7 @@ const stdLogger = {
 const RECONNECT_TIMEOUT = 30000
 
 let standardOptions = {
+  useMongoClient: true,
   keepAlive: 1,
   socketTimeoutMS: 0,
   connectTimeoutMS: 0,
