@@ -76,7 +76,6 @@ function _connect (options) {
     })
 
     mongoose.connect(dbUri, dbOptions)
-    log.info('Connect DB: ' + options.dbUri)
   })
 }
 
