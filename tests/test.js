@@ -54,7 +54,7 @@ describe('Test kth-node-mongo connection process', function () {
       name: 'CheckOptionsAPI',
       connect: function (uri, options) {
         expect(uri).to.be.undefined // no default uri
-        expect(options).to.be.defined
+        expect(options).not.to.be.undefined
         this.connection.emit('connected')
       },
       connection: new EventEmitter()
