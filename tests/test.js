@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+/* eslint-disable no-unused-expressions */
+
 'use strict'
 
 const mockery = require('mockery')
