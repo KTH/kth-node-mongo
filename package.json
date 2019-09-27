@@ -13,15 +13,19 @@
     "type": "git",
     "url": "https://github.com/KTH/kth-node-mongo"
   },
-  "author": "KTH",
+  "author": {
+    "name": "KTH",
+    "email": "infosys@kth.se",
+    "url": "https://github.com/KTH"
+  },
   "license": "MIT",
   "peerDependencies": {
-    "mongoose": "^5.3.0"
+    "mongoose": "^5.7.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.0",
     "mockery": "^2.1.0",
-    "standard": "^12.0.1"
+    "standard": "^14.3.1"
   }
 }
