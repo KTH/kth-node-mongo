@@ -23,6 +23,7 @@ let standardOptions = {
   connectTimeoutMS: 0,
   ssl: false,
   autoReconnect: true,
+  reconnectTries: 30,
   reconnectInterval: RECONNECT_TIMEOUT,
   useNewUrlParser: true,
   logger: stdLogger
