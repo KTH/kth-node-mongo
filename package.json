@@ -2,13 +2,16 @@
   "name": "kth-node-mongo",
   "version": "3.1.2",
   "description": "Database connection module for Node.js applications using Mongoose.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "codecheck": "standard",
-    "test": "mocha tests/**",
+    "codecheck": "prettier",
     "preversion": "npm run codecheck && npm run test",
     "postversion": "git push && git push --tags",
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:notify": "jest --watch --notify",
+    "test:coverage": "jest --collectCoverage --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -20,13 +23,39 @@
     "url": "https://github.com/KTH"
   },
   "license": "MIT",
-  "peerDependencies": {
+  "dependencies": {
     "mongoose": "^5.7.7"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.2.2",
-    "mockery": "^2.1.0",
-    "standard": "^14.3.1"
+    "@types/node": ">=4.2.0 <13",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.4",
+    "@types/jest": "^25.2.1",
+    "jest": "^25.3.0",
+    "jest-extended": "^0.11.5"
+  },
+  "prettier": {
+    "//": "configuration version 2020-04-10 - might also reside in .prettierrc.json",
+    "arrowParens": "avoid",
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "jest": {
+    "//": "configuration version 2020-04-10 (API+NPM) - might also reside as module.exports in jest.config.js",
+    "clearMocks": true,
+    "notifyMode": "failure-change",
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ],
+    "testEnvironment": "node",
+    "verbose": true
   }
 }

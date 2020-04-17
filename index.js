@@ -1,4 +1,6 @@
-'use strict'
+/* eslint no-use-before-define: ["error", "nofunc"] */
+
+// @ts-check
 
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
@@ -6,18 +8,18 @@ mongoose.Promise = global.Promise
 // setup Mongoose connection to mongoDB
 module.exports = {
   connect: _connect,
-  isOk: _isOk
+  isOk: _isOk,
 }
 
 const stdLogger = {
   debug: consoleLogger('debug'),
   info: consoleLogger('info'),
   warn: consoleLogger('warn'),
-  error: consoleLogger('error')
+  error: consoleLogger('error'),
 }
 const RECONNECT_TIMEOUT = 30000
 
-let standardOptions = {
+const standardOptions = {
   keepAlive: 1,
   socketTimeoutMS: 0,
   connectTimeoutMS: 0,
@@ -26,34 +28,35 @@ let standardOptions = {
   reconnectTries: 30,
   reconnectInterval: RECONNECT_TIMEOUT,
   useNewUrlParser: true,
-  logger: stdLogger
+  logger: stdLogger,
 }
 
-function consoleLogger (level) {
-  return function (file, msg) {
+function consoleLogger(level) {
+  return (file, msg) => {
+    // eslint-disable-next-line no-console
     console.log(new Date().toISOString(), level, file, msg)
   }
 }
 
-var isOk
-function _isOk () {
+let isOk
+function _isOk() {
   return isOk === true
 }
 
-function _connect (options) {
-  var log = options.logger || stdLogger
+function _connect(options) {
+  const log = options.logger || stdLogger
   // Mongoose connect is called once by the app.js & connection established
-  var dbUri = options.dbUri
+  const { dbUri } = options
   delete options.dbUri
-  var dbOptions = getMongoOptions(options)
+  const dbOptions = getMongoOptions(options)
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     mongoose.connection.on('error', dbErr => {
       log.warn({ err: dbErr.message }, 'DB connection error, retrying in 30 seconds')
       isOk = false
       // disconnect if connection is still open
       mongoose.disconnect(() => {
-        setTimeout(function () {
+        setTimeout(() => {
           mongoose.connect(dbUri, dbOptions)
           log.info('Attempting to reconnect')
         }, options.reconnectInterval || RECONNECT_TIMEOUT)
@@ -80,17 +83,16 @@ function _connect (options) {
   })
 }
 
-function getMongoOptions (options) {
-  var dbOptions = _mergeOptions(standardOptions, options)
+function getMongoOptions(options) {
+  const dbOptions = _mergeOptions(standardOptions, options)
   return dbOptions
 }
 
 // merge all options objects front to back, i.e. later overriding earlier objects
-function _mergeOptions () {
-  var options = {}
-  for (var i = 0; i < arguments.length; ++i) {
-    let obj = arguments[i]
-    for (var attr in obj) { options[attr] = obj[attr] }
+function _mergeOptions(...args) {
+  const options = {}
+  for (let i = 0; i < args.length; i++) {
+    Object.assign(options, args[i])
   }
   return options
 }

@@ -53,30 +53,38 @@ Function connect() returns a promise to be resolved upon completed connection or
 
 Example without secure database connction
 
-    nodeMongo.connect({
-      dbUsername: 'user',
-      dbPassword: 'himligt',
-      dbUri: 'mongodb://localhost/le_database?authSource=authDB',
-      logger: log
-    })
-    .then(() => log.debug('Connected to Mongo'))
-    .catch((err) => log.error(err))
+```js
+nodeMongo
+  .connect({
+    dbUsername: 'user',
+    dbPassword: 'himligt',
+    dbUri: 'mongodb://localhost/le_database?authSource=authDB',
+    logger: log,
+  })
+  .then(() => log.debug('Connected to Mongo'))
+  .catch(err => log.error(err))
+```
 
 Example with secure database connction
 
-    nodeMongo.connect({
+```js
+nodeMongo
+  .connect(
+    {
       dbUsername: 'user',
       dbPassword: 'himligt',
       dbUri: 'mongodb://localhost/le_database',
-      logger: log
+      logger: log,
     },
     {
       ssl: true,
       authenticationDatabase: 'authDB',
-      sslCA: certs
-    })
-    .then(() => log.debug('Connected to Mongo'))
-    .catch((err) => log.error(err))
+      sslCA: certs,
+    }
+  )
+  .then(() => log.debug('Connected to Mongo'))
+  .catch(err => log.error(err))
+```
 
 ## Check status of connection
 
@@ -84,8 +92,11 @@ Example with secure database connction
    const nodeMongo =require('kth-node-mongo')
 
 1. Check connection:
+
+   ```js
    if (nodeMongo.isOk()) {
-   // OK
+     // OK
    } else {
-   // ERROR
+     // ERROR
    }
+   ```

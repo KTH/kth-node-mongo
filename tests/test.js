@@ -1,84 +1,55 @@
-/* eslint-env mocha */
-/* eslint-disable no-unused-expressions */
+/* eslint no-use-before-define: ["error", "nofunc"] */
 
-'use strict'
+// @ts-check
 
-const mockery = require('mockery')
-const expect = require('chai').expect
-const EventEmitter = require('events')
+const MongooseMockup = require('mongoose')
+// @ts-ignore
+const { setMockupMode } = MongooseMockup
 
-const mockLogger = {}
-
-mockLogger.debug = mockLogger.info = mockLogger.error = mockLogger.warn = () => {}
-
-const connectedApi = {
-  name: 'ConnectedAPI',
-  connect: function (options) {
-    this.connection.emit('connected')
-  },
-  connection: new EventEmitter()
+const mockLogger = {
+  debug: jest.fn(),
+  info: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
 }
 
-const errorApi = {
-  name: 'ErrorAPI',
-  connect: function (options) {
-    this.connection.emit('error', {
-      message: 'DATABASE ERROR'
-    })
-  },
-  connection: new EventEmitter()
-}
+const kthNodeMongo = require('../index')
 
-describe('Test kth-node-mongo connection process', function () {
-  beforeEach(function () {
-    mockery.enable({
-      warnOnUnregistered: false,
-      warnOnReplace: false,
-      useCleanCache: true
-    })
-  })
-  afterEach(function () {
-    mockery.disable()
-  })
-
-  it('should call the connect method', function (done) {
-    mockery.registerMock('mongoose', connectedApi)
-    const kthNodeMongo = require('../index')
-    kthNodeMongo.connect({ logger: mockLogger }).then(() => {
-      expect(kthNodeMongo.isOk()).to.be.true
-      mockery.deregisterAll()
-      done()
-    })
-  })
-
-  it('should provide some sane default options', function (done) {
-    const checkOptionsApi = {
-      name: 'CheckOptionsAPI',
-      connect: function (uri, options) {
-        expect(uri).to.be.undefined // no default uri
-        expect(options).not.to.be.undefined
-        this.connection.emit('connected')
-      },
-      connection: new EventEmitter()
+describe('Test kth-node-mongo connection process', () => {
+  it('should call the connect method', () => {
+    function connect() {
+      this.connection.emit('connected')
     }
-    mockery.registerMock('mongoose', checkOptionsApi)
+    setMockupMode({ name: 'ConnectedAPI', connect })
 
-    const kthNodeMongo = require('../index')
-    kthNodeMongo.connect({ logger: mockLogger }).then(() => {
-      expect(kthNodeMongo.isOk()).to.be.true
-      mockery.deregisterAll()
-      done()
+    return kthNodeMongo.connect({ logger: mockLogger }).then(() => {
+      expect(kthNodeMongo.isOk()).toBe(true)
     })
   })
 
-  it('should disconnect on error', function (done) {
-    errorApi.disconnect = function () {
-      expect(kthNodeMongo.isOk()).to.be.false
+  it('should provide some sane default options', () => {
+    function connect(uri, options) {
+      expect(uri).toBeUndefined()
+      expect(options).not.toBeUndefined()
+      this.connection.emit('connected')
+    }
+    setMockupMode({ name: 'CheckOptionsAPI', connect })
+
+    return kthNodeMongo.connect({ logger: mockLogger }).then(() => {
+      expect(kthNodeMongo.isOk()).toBe(true)
+    })
+  })
+
+  it('should disconnect on error', done => {
+    function connect() {
+      this.connection.emit('error', { message: 'DATABASE ERROR' })
+    }
+    function disconnect() {
+      expect(kthNodeMongo.isOk()).toBe(false)
       done()
     }
-    mockery.registerMock('mongoose', errorApi)
-    const kthNodeMongo = require('../index')
-    kthNodeMongo.connect({ logger: mockLogger }).then(() => {})
-    mockery.deregisterAll()
+    setMockupMode({ name: 'ErrorAPI', connect, disconnect })
+
+    kthNodeMongo.connect({ logger: mockLogger })
   })
 })
