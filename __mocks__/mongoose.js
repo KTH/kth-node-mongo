@@ -4,22 +4,29 @@
 
 const EventEmitter = require('events')
 
-// @ts-ignore
-class TestEmitter extends EventEmitter {}
-
 const Mockup = {
-  setMockupMode,
+  _setMockupMode,
   name: null,
-  connection: null,
   connect: null,
   disconnect: null,
+  connection: null,
 }
 
-function setMockupMode({ name, connect, disconnect }) {
+// @ts-ignore
+class TestEmitter extends EventEmitter {
+  constructor({ close }) {
+    super()
+    if (typeof close === 'function') {
+      this.close = close.bind(Mockup)
+    }
+  }
+}
+
+function _setMockupMode({ name, connect, disconnect, close }) {
   Mockup.name = name
-  Mockup.connection = new TestEmitter()
-  Mockup.connect = connect.bind(Mockup)
+  Mockup.connect = typeof connect === 'function' ? connect.bind(Mockup) : null
   Mockup.disconnect = typeof disconnect === 'function' ? disconnect.bind(Mockup) : null
+  Mockup.connection = new TestEmitter({ close })
 }
 
 module.exports = Mockup
