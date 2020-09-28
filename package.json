@@ -3,6 +3,7 @@
   "version": "3.2.3",
   "description": "Database connection module for Node.js applications using Mongoose.",
   "main": "lib/index.js",
+  "automaticPublish": "true",
   "scripts": {
     "codecheck": "prettier",
     "preversion": "npm run codecheck && npm run test",
