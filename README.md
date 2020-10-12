@@ -34,11 +34,6 @@ Function connect() returns a promise to be resolved upon completed connection or
 
 - **logger** (optional)
   A logger to use, defaults to stdout(console.log)
-- **reconnectTries** (optional)
-  Max attempts to reconnect to mongoDB if connection is lost, defaults to 1000
-
-- **reconnectInterval** (optional)
-  Time between reconnect attempts in milliseconds, defaults to 30000
 
 ### SSL(TLS) Options
 
