@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:notify": "jest --watch --notify",
-    "test:coverage": "jest --collectCoverage --detectOpenHandles"
+    "test:coverage": "jest --collectCoverage --detectOpenHandles",
+    "clean": "rm -r ./node_modules && rm package-lock.json"
   },
   "repository": {
     "type": "git",
