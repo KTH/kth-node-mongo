@@ -6,14 +6,13 @@
   "automaticPublish": "true",
   "scripts": {
     "codecheck": "prettier",
-    "preversion": "npm run codecheck && npm run test",
-    "postversion": "git push && git push --tags",
     "build": "./build.sh",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:notify": "jest --watch --notify",
     "test:coverage": "jest --collectCoverage --detectOpenHandles",
-    "clean": "rm -r ./node_modules && rm package-lock.json"
+    "clean": "rm -r ./node_modules && rm package-lock.json",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -27,13 +26,13 @@
   "license": "MIT",
   "dependencies": {
     "kth-node-log": "^3.1.4",
-    "mongoose": "^5.12.3"
+    "mongoose": "^5.12.5"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.13.10",
+    "@babel/eslint-parser": "^7.13.14",
     "@kth/eslint-config-kth": "^1.0.10",
     "@types/jest": "^26.0.22",
-    "eslint": "^7.24.0",
+    "eslint": "^7.25.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "jest-extended": "^0.11.5",
@@ -41,7 +40,6 @@
     "pretty-quick": "^3.1.0"
   },
   "prettier": {
-    "//": "configuration version 2020-04-10 - might also reside in .prettierrc.json",
     "arrowParens": "avoid",
     "printWidth": 100,
     "semi": false,
