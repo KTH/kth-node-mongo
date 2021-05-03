@@ -12,7 +12,7 @@
     "test:notify": "jest --watch --notify",
     "test:coverage": "jest --collectCoverage --detectOpenHandles",
     "clean": "rm -r ./node_modules && rm package-lock.json",
-    "prepare": "husky install"
+    "prepare": "bash -c 'if [ -f ./node_modules/.bin/husky ]; then husky install; fi'"
   },
   "repository": {
     "type": "git",
