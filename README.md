@@ -1,4 +1,4 @@
-# kth-node-mongo [![Build Status](https://travis-ci.org/KTH/kth-node-mongo.svg?branch=master)](https://travis-ci.org/KTH/kth-node-mongo)
+# @kth/mongo
 
 Database connection wrapping Mongoose (for MongoDB)
 
@@ -9,12 +9,9 @@ To use this module
 ## Connect to database
 
 1. Import module  
-   const nodeMongo =require('kth-node-mongo')
+   const nodeMongo =require(@kth/mongo')
 
-1. Connect to mongoDB over SSL:
-   nodeMongo.connect(options, sslOptions) or
-
-1. Connect to mongoDB without SSL:
+1. Connect to mongoDB :
    nodeMongo.connect(options)
 
 1. Use Mongoose schema and model to interact with mongoDB
@@ -40,12 +37,6 @@ Function connect() returns a promise to be resolved upon completed connection or
 - **ssl** (optional)
   Boolean flag if database connection shoold be encrypted or not
 
-- **authDatabase** (optional)
-  If login credentials are used, specifies which database to use for authentication of user. Can also be sent as part of dbUri.
-
-- **caCerts** (optional)
-  A list of buffers or strings containing the ca certificates (.pem) we accept when setting up the secure connetion.
-
 Example without secure database connction
 
 ```js
@@ -64,19 +55,13 @@ Example with secure database connction
 
 ```js
 nodeMongo
-  .connect(
-    {
-      dbUsername: 'user',
-      dbPassword: 'himligt',
-      dbUri: 'mongodb://localhost/le_database',
-      logger: log,
-    },
-    {
-      ssl: true,
-      authenticationDatabase: 'authDB',
-      sslCA: certs,
-    }
-  )
+  .connect({
+    dbUsername: 'user',
+    dbPassword: 'himligt',
+    dbUri: 'mongodb://localhost/le_database',
+    logger: log,
+    ssl: true,
+  })
   .then(() => log.debug('Connected to Mongo'))
   .catch(err => log.error(err))
 ```
@@ -84,7 +69,7 @@ nodeMongo
 ## Check status of connection
 
 1. Import module  
-   const nodeMongo =require('kth-node-mongo')
+   const nodeMongo =require('@kth/mongo')
 
 1. Check connection:
 
