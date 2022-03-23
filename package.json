@@ -26,7 +26,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@kth/log": "^4.0.0"
+    "@kth/log": "^4.0.1"
   },
   "peerdependencies": {
     "mongoose": "^6.1.4"
@@ -34,13 +34,13 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
     "@kth/eslint-config-kth": "^2.0.2",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "ansi-regex": "^6.0.1",
     "eslint": "^7.32.0",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "jest-extended": "^1.2.1",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "pretty-quick": "^3.1.3",
     "set-value": "^4.1.0"
   },
