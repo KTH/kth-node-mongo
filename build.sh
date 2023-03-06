@@ -2,3 +2,4 @@
 
 npm ci
 npm test
+tsc

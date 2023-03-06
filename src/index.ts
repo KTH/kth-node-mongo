@@ -1,11 +1,7 @@
-/* eslint-disable import/no-unresolved */
 const kthLog = require('@kth/log')
-
-// eslint-disable import/no-extraneous-dependencies
-const mongoose = require('mongoose')
-
+import mongoose from 'mongoose'
 const standardOptions = {
-  ssl: false,
+  ssl: true,
   // keepAlive: true,
   // keepAliveInitialDelay: 0,
   // socketTimeoutMS: 0,
@@ -13,31 +9,40 @@ const standardOptions = {
   // heartbeatFrequencyMS: 5000,
 }
 
-const Global = {
-  isConnected: null,
+type TGlobal = {
+  isConnected?: boolean
+  checkConnectionOnceTimerID: null
+}
+
+const Global: TGlobal = {
+  isConnected: undefined,
   checkConnectionOnceTimerID: null,
 }
 
-function _getMongoOptionsWithoutDbUri(options) {
-  const dbOptions = { ...standardOptions, ...options }
-  delete dbOptions.dbUri
-  delete dbOptions.logger
-  return dbOptions
+type ConnectOptions = {
+  logger?: null
+  dbUri: string
+  mongooseDebug: boolean
+}
+
+function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
+  const { mongooseDebug } = options
+  return { ...standardOptions, mongooseDebug }
 }
 
 /**
  * @returns {boolean}
- *      True iff default connection to MongoDB is currently established
+ *      True if default connection to MongoDB is currently established
  */
-function isOk() {
+export function isOk() {
   return Global.isConnected === true
 }
 
 function getLogger(logger = kthLog) {
-  return logger.child({ package: '@kth/mongo' })
+  return logger.child()
 }
 
-async function connect(options) {
+export async function connect(options: ConnectOptions) {
   const log = getLogger(options.logger)
   const { dbUri } = options
   const dbOptions = _getMongoOptionsWithoutDbUri(options)
@@ -69,14 +74,10 @@ async function connect(options) {
       log.fatal('DATABASE: Connection error', { error })
       Global.isConnected = false
     })
-
-    return mongoose.connect(dbUri, dbOptions).then(data => {
-      log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
-      log.debug(`DATABASE driver version: ${data.connection._connectionOptions.driverInfo.version}`)
-    })
+    const data = await mongoose.connect(dbUri, dbOptions)
+    log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
   } catch (err) {
     log.error('DATABASE:', err && err.reason ? err.reason : err)
     return null
   }
 }
-module.exports = { connect, isOk }
