@@ -1,7 +1,7 @@
 const kthLog = require('@kth/log')
 import mongoose from 'mongoose'
 const standardOptions = {
-  ssl: true,
+  ssl: false,
   // keepAlive: true,
   // keepAliveInitialDelay: 0,
   // socketTimeoutMS: 0,
@@ -39,7 +39,7 @@ export function isOk() {
 }
 
 function getLogger(logger = kthLog) {
-  return logger.child()
+  return logger.child({ package: '@kth/mongo' })
 }
 
 export async function connect(options: ConnectOptions) {
