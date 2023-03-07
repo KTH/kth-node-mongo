@@ -22,7 +22,7 @@ const Global: TGlobal = {
 type ConnectOptions = {
   logger?: null
   dbUri: string
-  mongooseDebug: boolean
+  mongooseDebug?: boolean
 }
 
 function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
