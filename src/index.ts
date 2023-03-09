@@ -23,11 +23,14 @@ type ConnectOptions = {
   logger?: null
   dbUri: string
   mongooseDebug?: boolean
+  user: string
+  pass: string
+  ssl?: boolean
 }
 
 function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
-  const { mongooseDebug } = options
-  return { ...standardOptions, mongooseDebug }
+  const { mongooseDebug, user, pass, ssl } = options
+  return { ...standardOptions, mongooseDebug, user, pass, ssl }
 }
 
 // True if default connection to MongoDB is currently established
