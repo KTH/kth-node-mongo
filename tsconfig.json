@@ -6,7 +6,8 @@
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": true,
+    "strict": true
   },
   "include": ["src/**/*", "node_modules/jest-extended/types/**/*.d.ts"],
   "exclude": ["src/**/*.test.ts"]

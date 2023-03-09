@@ -30,10 +30,7 @@ function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
   return { ...standardOptions, mongooseDebug }
 }
 
-/**
- * @returns {boolean}
- *      True if default connection to MongoDB is currently established
- */
+// True if default connection to MongoDB is currently established
 export function isOk() {
   return Global.isConnected === true
 }
@@ -76,8 +73,8 @@ export async function connect(options: ConnectOptions) {
     })
     const data = await mongoose.connect(dbUri, dbOptions)
     log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
-  } catch (err) {
-    log.error('DATABASE:', err && err.reason ? err.reason : err)
+  } catch (e) {
+    log.error('DATABASE:', e)
     return null
   }
 }
