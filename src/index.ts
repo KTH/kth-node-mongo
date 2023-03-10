@@ -9,15 +9,7 @@ const standardOptions = {
   // heartbeatFrequencyMS: 5000,
 }
 
-type TGlobal = {
-  isConnected?: boolean
-  checkConnectionOnceTimerID: null
-}
-
-const Global: TGlobal = {
-  isConnected: undefined,
-  checkConnectionOnceTimerID: null,
-}
+let isConnected = false
 
 type ConnectOptions = {
   logger?: null
@@ -35,7 +27,7 @@ function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
 
 // True if default connection to MongoDB is currently established
 export function isOk() {
-  return Global.isConnected === true
+  return isConnected === true
 }
 
 function getLogger(logger = kthLog) {
@@ -57,22 +49,22 @@ export async function connect(options: ConnectOptions) {
 
     mongoose.connection.on('connected', () => {
       log.info('DATABASE: Default connection established')
-      Global.isConnected = true
+      isConnected = true
     })
 
     mongoose.connection.on('reconnected', () => {
       log.info('DATABASE: Default connection re-established')
-      Global.isConnected = true
+      isConnected = true
     })
 
     mongoose.connection.on('disconnected', () => {
       log.warn('DATABASE: Default connection lost')
-      Global.isConnected = false
+      isConnected = false
     })
 
     mongoose.connection.on('error', error => {
       log.fatal('DATABASE: Connection error', { error })
-      Global.isConnected = false
+      isConnected = false
     })
     const data = await mongoose.connect(dbUri, dbOptions)
     log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
