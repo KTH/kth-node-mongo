@@ -1,6 +1,6 @@
 {
   "name": "@kth/mongo",
-  "version": "4.0.14",
+  "version": "4.0.15",
   "description": "Database connection module for Node.js applications using Mongoose.",
   "main": "lib/index.js",
   "files": [
