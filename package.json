@@ -1,9 +1,11 @@
 {
   "name": "@kth/mongo",
-  "version": "4.0.0",
+  "version": "4.0.14",
   "description": "Database connection module for Node.js applications using Mongoose.",
   "main": "lib/index.js",
-  "automaticPublish": "true",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "lint": "eslint \"**/*.js\" --quiet",
     "lint-v": "eslint \"**/*.js\"",
