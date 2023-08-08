@@ -1,4 +1,4 @@
-const kthLog = require('@kth/log')
+import kthLog from '@kth/log'
 import mongoose from 'mongoose'
 const standardOptions = {
   ssl: false,
@@ -66,8 +66,9 @@ export async function connect(options: ConnectOptions) {
       log.fatal('DATABASE: Connection error', { error })
       isConnected = false
     })
-    const data = await mongoose.connect(dbUri, dbOptions)
-    log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
+    return mongoose.connect(dbUri, dbOptions).then(data => {
+      log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
+    })
   } catch (e) {
     log.error('DATABASE:', e)
     return null

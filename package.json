@@ -10,7 +10,7 @@
     "lint": "eslint \"**/*.js\" --quiet",
     "lint-v": "eslint \"**/*.js\"",
     "codecheck": "prettier",
-    "build": "./build.sh",
+    "build": "tsc",
     "test": "jest src",
     "test:jest": "jest",
     "test:watch": "jest --watch src",
