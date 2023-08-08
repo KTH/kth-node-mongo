@@ -1,29 +1,7 @@
 import kthLog from '@kth/log'
-import mongoose from 'mongoose'
-const standardOptions = {
-  ssl: false,
-  // keepAlive: true,
-  // keepAliveInitialDelay: 0,
-  // socketTimeoutMS: 0,
-  // serverSelectionTimeoutMS: 5000,
-  // heartbeatFrequencyMS: 5000,
-}
+import mongoose, { type ConnectOptions } from 'mongoose'
 
 let isConnected = false
-
-type ConnectOptions = {
-  logger?: null
-  dbUri: string
-  mongooseDebug?: boolean
-  user: string
-  pass: string
-  ssl?: boolean
-}
-
-function _getMongoOptionsWithoutDbUri(options: ConnectOptions) {
-  const { mongooseDebug, user, pass, ssl } = options
-  return { ...standardOptions, mongooseDebug, user, pass, ssl }
-}
 
 // True if default connection to MongoDB is currently established
 export function isOk() {
@@ -34,15 +12,18 @@ function getLogger(logger = kthLog) {
   return logger.child({ package: '@kth/mongo' })
 }
 
-export async function connect(options: ConnectOptions) {
-  const log = getLogger(options.logger)
-  const { dbUri } = options
-  const dbOptions = _getMongoOptionsWithoutDbUri(options)
+export async function connect(
+  dbUri: string,
+  connectOptions: ConnectOptions,
+  logger: any,
+  debug = false
+) {
+  const log = getLogger(logger)
 
   try {
     log.info('DATABASE: Connecting database...')
 
-    if (options.mongooseDebug) {
+    if (debug) {
       log.warn('Using debug for Mongoose. This will hurt the performance.')
       mongoose.set('debug', true)
     }
@@ -66,7 +47,7 @@ export async function connect(options: ConnectOptions) {
       log.fatal('DATABASE: Connection error', { error })
       isConnected = false
     })
-    return mongoose.connect(dbUri, dbOptions).then(data => {
+    return mongoose.connect(dbUri, connectOptions).then(data => {
       log.debug(`DATABASE connected: ${data.connection.host}@${data.connection.name}`)
     })
   } catch (e) {

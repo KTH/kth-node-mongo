@@ -1,23 +1,13 @@
-jest.mock('@kth/log', () => ({
-  init: jest.fn(() => {}),
-  child: jest.fn(() => ({
-    debug: jest.fn(),
-    error: jest.fn(),
-    fatal: jest.fn(),
-    info: jest.fn(),
-  })),
-  debug: jest.fn(),
-  error: jest.fn(),
-  fatal: jest.fn(),
-  info: jest.fn(),
-}))
-
+import 'jest-extended'
 const mockMoongoose = {
   connect: jest.fn(() => {}),
   connection: {
     on: jest.fn(() => {}),
   },
 }
+jest.mock('mongoose', () => mockMoongoose)
+import { connect } from './index'
+
 describe('Test kth-node-mongo connection process', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -26,10 +16,21 @@ describe('Test kth-node-mongo connection process', () => {
   afterAll(() => jest.resetAllMocks())
 
   test('should call the connect method and register event handlers', async () => {
-    jest.mock('mongoose', () => mockMoongoose)
-    const { connect } = require('./index')
+    const logger = {
+      init: jest.fn(() => {}),
+      child: jest.fn(() => ({
+        debug: jest.fn(),
+        error: jest.fn(),
+        fatal: jest.fn(),
+        info: jest.fn(),
+      })),
+      debug: jest.fn(),
+      error: jest.fn(),
+      fatal: jest.fn(),
+      info: jest.fn(),
+    }
 
-    await connect({})
+    await connect('mongodb-uri', {}, logger)
 
     expect(mockMoongoose.connect).toHaveBeenCalledTimes(1)
     expect(mockMoongoose.connection.on).toHaveBeenCalledWith('connected', expect.toBeFunction())
