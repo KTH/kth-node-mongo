@@ -47,7 +47,6 @@
     "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jest-extended": "^4.0.2",
-    "node-notifier": "^10.0.1",
     "prettier": "^2.8.8",
     "pretty-quick": "^3.3.1",
     "set-value": "^4.1.0"
