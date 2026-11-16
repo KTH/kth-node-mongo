@@ -17,7 +17,7 @@
     "test:notify": "jest --watch --notify",
     "test:coverage": "jest --collectCoverage --detectOpenHandles",
     "clean": "rm -r ./node_modules && rm package-lock.json",
-    "prepare": "if [ -f ./node_modules/.bin/husky ]; then husky install; fi"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "@types/jest": "^30.0.0",
     "ansi-regex": "^6.2.2",
     "eslint": "^9.39.5",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "jest": "^30.5.2",
     "jest-extended": "^7.0.0",
     "prettier": "^3.10.1",
